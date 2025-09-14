@@ -2,13 +2,12 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 #include <string>
 #include <vector>
 
 using std::vector;
 
-const int FPS = 360;
+const int FPS = 120;
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 const Color BACKGROUND_COLOR = (Color){30, 30, 30, 255};
@@ -16,6 +15,7 @@ const float PLAYER_RADIUS = 30.0;
 const float PLAYER_VELOCITY = 200.0;
 const int PLAYER_HEALTH = 5;
 const Color PLAYER_COLOR = (Color){255, 0, 0, 255};
+const int PLAYER_HEALTH_REGAIN_SCORE = 20;
 const float ENEMY_VELOCITY = 20.0;
 const Color ENEMY_COLOR = (Color){255, 255, 255, 255};
 const float ENEMY_RADIUS = 20.0;
@@ -168,20 +168,32 @@ void addTail(Circle *circle) {
 Vector2 generateRandomCoord(Circle player) {
     int randomX = ENEMY_SPAWN_OFFSET + rand() % ENEMY_SPAWN_OFFSET;
     int randomY = ENEMY_SPAWN_OFFSET + rand() % ENEMY_SPAWN_OFFSET;
-    int randomCoord = rand() % 4;
+    int randomQuad = rand() % 8;
 
-    if (randomCoord == 0) {
+    if (randomQuad == 0) {
 	randomX = player.origin.x - randomX;
 	randomY = player.origin.y - randomY;
-    } else if (randomCoord == 1) {
+    } else if (randomQuad == 1) {
 	randomX = player.origin.x - randomX;
 	randomY = player.origin.y + randomY;
-    } else if (randomCoord == 2) {
+    } else if (randomQuad == 2) {
 	randomX = player.origin.x + randomX;
 	randomY = player.origin.y - randomY;
-    } else {
+    } else if (randomQuad == 3) {
 	randomX = player.origin.x + randomX;
 	randomY = player.origin.y + randomY;
+    } else if (randomQuad == 4) {
+	randomX = player.origin.x;
+	randomY = player.origin.y + randomY;
+    } else if (randomQuad == 5) {
+	randomX = player.origin.x + randomX; 
+	randomY = player.origin.y;
+    } else if (randomQuad == 6) {
+	randomX = player.origin.x;
+	randomY = player.origin.y - randomY;
+    } else if (randomQuad == 7) {
+	randomX = player.origin.x - randomX; 
+	randomY = player.origin.y;
     }
 
     return {(float)randomX, (float)randomY};
@@ -295,7 +307,7 @@ int main() {
 		    bulletList.erase(bulletList.begin() + bi);
 		    enemyList.erase(enemyList.begin() + i);
 		    score++;
-		    if (score % 10 == 0) player.health++;
+		    if (score % PLAYER_HEALTH_REGAIN_SCORE == 0) player.health++;
 		    if (score > highScore) highScore = score;
 		}
 	    }
