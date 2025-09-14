@@ -1,1 +1,3 @@
-[![Shboot](screenshots/shboot-1.png)](screenshots/shboot.mp4)
+# Demo
+
+![](screenshots/shboot-comp.gif)
